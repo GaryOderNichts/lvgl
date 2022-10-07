@@ -164,7 +164,12 @@ enum {
 # define LV_COLOR_GET_A32(c) (c).ch.alpha
 
 # define _LV_COLOR_ZERO_INITIALIZER32  {{0x00, 0x00, 0x00, 0x00}}
+
+#if LV_BIG_ENDIAN_SYSTEM == 0
 # define LV_COLOR_MAKE32(r8, g8, b8) {{b8, g8, r8, 0xff}} /*Fix 0xff alpha*/
+#else
+# define LV_COLOR_MAKE32(r8, g8, b8) {{0xff, r8, g8, b8}} /*Fix 0xff alpha*/
+#endif
 
 /*---------------------------------------
  * Macros for the current color depth
@@ -223,10 +228,17 @@ typedef union {
 
 typedef union {
     struct {
+#if LV_BIG_ENDIAN_SYSTEM == 0
         uint8_t blue;
         uint8_t green;
         uint8_t red;
         uint8_t alpha;
+#else
+        uint8_t alpha;
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+#endif
     } ch;
     uint32_t full;
 } lv_color32_t;

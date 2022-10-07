@@ -235,10 +235,17 @@ static SDL_Texture * upload_img_texture(SDL_Renderer * renderer, lv_img_decoder_
     int h = (int) dsc->header.h;
     int w = (int) dsc->header.w;
     void * data = (void *) dsc->img_data;
+#if LV_BIG_ENDIAN_SYSTEM == 0
     Uint32 rmask = 0x00FF0000;
     Uint32 gmask = 0x0000FF00;
     Uint32 bmask = 0x000000FF;
     Uint32 amask = 0xFF000000;
+#else
+    Uint32 rmask = 0x0000FF00;
+    Uint32 gmask = 0x00FF0000;
+    Uint32 bmask = 0xFF000000;
+    Uint32 amask = 0x000000FF;
+#endif
     if(chroma_keyed) {
         amask = 0x00;
     }
@@ -258,10 +265,17 @@ static SDL_Texture * upload_img_texture_fallback(SDL_Renderer * renderer, lv_img
     for(lv_coord_t y = 0; y < h; y++) {
         lv_img_decoder_read_line(dsc, 0, y, w, &data[y * w * sizeof(lv_color_t)]);
     }
+#if LV_BIG_ENDIAN_SYSTEM == 0
     Uint32 rmask = 0x00FF0000;
     Uint32 gmask = 0x0000FF00;
     Uint32 bmask = 0x000000FF;
     Uint32 amask = 0xFF000000;
+#else
+    Uint32 rmask = 0x0000FF00;
+    Uint32 gmask = 0x00FF0000;
+    Uint32 bmask = 0xFF000000;
+    Uint32 amask = 0x000000FF;
+#endif
     SDL_Surface * surface = SDL_CreateRGBSurfaceFrom(data, w, h, LV_COLOR_DEPTH, w * LV_COLOR_DEPTH / 8,
                                                      rmask, gmask, bmask, amask);
     SDL_SetColorKey(surface, SDL_TRUE, lv_color_to32(LV_COLOR_CHROMA_KEY));

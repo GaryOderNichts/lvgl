@@ -27,7 +27,7 @@ extern "C" {
  *      DEFINES
  *********************/
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN && !defined(__WIIU__) /* rendering to any non-RGBA texture on the Wii U currently breaks due to swizzling */
 #define LV_DRAW_SDL_TEXTURE_FORMAT SDL_PIXELFORMAT_ARGB8888
 #else
 #define LV_DRAW_SDL_TEXTURE_FORMAT SDL_PIXELFORMAT_RGBA8888
